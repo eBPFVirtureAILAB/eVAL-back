@@ -18,7 +18,7 @@ func SetEnv() {
 	var myEnv map[string]string
 	myEnv, err := godotenv.Read()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Printf("Error loading .env file")
 		return
 	}
 	if myEnv["HOST"] != "" {
