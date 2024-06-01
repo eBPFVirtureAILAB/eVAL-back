@@ -109,3 +109,27 @@ func PodConnectionHandler() gin.HandlerFunc {
 
 	}
 }
+
+func SaveKubeConfigHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		file, err := c.FormFile("file")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		err = c.SaveUploadedFile(file, kubeconfigPath())
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "kubeconfig file is saved",
+		})
+	}
+}

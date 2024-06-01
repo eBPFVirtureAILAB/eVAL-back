@@ -1,2 +1,4 @@
 .env
 kubeconfig
+tmp
+.air.toml

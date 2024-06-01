@@ -1,0 +1,29 @@
+# run main backend service
+
+services:
+  main:
+    build:
+      context: .
+      dockerfile: dockerfile_dev
+    ports:
+      - "8081:8080"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    networks:
+      - main  
+
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=eval
+    ports:
+      - "5432:5432"
+    networks:
+      - main
+
+networks:
+  main:

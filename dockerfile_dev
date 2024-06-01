@@ -1,0 +1,20 @@
+# syntax=docker/dockerfile:1
+FROM golang:1.22-alpine
+
+# Install necessary tools
+RUN apk add --no-cache git && \
+    go install github.com/cosmtrek/air@latest
+
+WORKDIR /app
+
+# Copy all
+COPY . .
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+RUN go mod download
+
+# VCS stamping tries to include version control information (like the current commit hash) in the built binary,
+# which can sometimes fail if the VCS information is not accessible or correctly configured. Disabling it can prevent related errors.
+RUN sed -i 's|cmd = "go build -o ./tmp/main main.go"|cmd = "go build -o ./tmp/main -buildvcs=false main.go"|' .air.toml
+
+# Start air for hot reloading
+CMD ["air", "-c", ".air.toml"]
